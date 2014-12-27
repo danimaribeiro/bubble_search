@@ -8,10 +8,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -74,7 +76,7 @@ namespace BubbleDownloadYoutube
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
 
@@ -165,6 +167,10 @@ namespace BubbleDownloadYoutube
             try
             {
                 item.Status = Estado.Downloading;
+                prgDownload.IsIndeterminate = false;
+                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                prgDownload.Value = 0;
+
                 IEnumerable<VideoInfo> videoInfos = await DownloadUrlResolver.GetDownloadUrlsAsync(item.UrlDownload);
                 foreach (VideoInfo videoInfo in videoInfos)
                 {
@@ -174,13 +180,26 @@ namespace BubbleDownloadYoutube
                             DownloadUrlResolver.DecryptDownloadUrl(videoInfo);
 
                         var videoDownloader = new VideoDownloader(videoInfo, item);
-                        videoDownloader.DownloadProgressChanged += (sender, args) => System.Diagnostics.Debug.WriteLine(args.ProgressPercentage);
-                        videoDownloader.DownloadFinished += videoDownloader_DownloadFinished;
-                        videoDownloader.DownloadStarted += videoDownloader_DownloadStarted;
-                        videoDownloader.Execute();
+                        var progress = new Progress<int>((indice) =>
+                        {
+                            System.Diagnostics.Debug.WriteLine(indice);
+                            Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                            {                              
+                                prgDownload.Value = indice;
+                            });
+                        });
+                        await videoDownloader.ExecuteAsync(progress);
+                        item.Status = Estado.Finalizado;
                         break;
                     }
                 }
+                prgDownload.IsIndeterminate = true;
+                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
+            catch (TaskCanceledException cancel)
+            {
+                System.Diagnostics.Debug.WriteLine("Download cancelado");
+                item.Status = Estado.Aguardando;
             }
             catch (Exception ex)
             {

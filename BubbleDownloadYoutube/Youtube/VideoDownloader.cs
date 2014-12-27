@@ -1,9 +1,9 @@
 ﻿using BubbleDownloadYoutube.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,8 +19,6 @@ namespace BubbleDownloadYoutube.Youtube
     /// </summary>
     public class VideoDownloader : Downloader
     {
-        private CancellationTokenSource cts;
-
         public DownloadItem ItemDownload { get; set; }
 
         /// <summary>
@@ -35,65 +33,72 @@ namespace BubbleDownloadYoutube.Youtube
         {
             ItemDownload = item;
         }
-        /// <summary>
-        /// Occurs when the downlaod progress of the video file has changed.
-        /// </summary>
-        public event EventHandler<ProgressEventArgs> DownloadProgressChanged;
+
         /// <summary>
         /// Starts the video download.
         /// </summary>
         /// <exception cref="IOException">The video file could not be saved.</exception>
         /// <exception cref="WebException">An error occured while downloading the video.</exception>
-        public override async void Execute()
+        public override async Task ExecuteAsync()
         {
-            try
-            {                
-                this.OnDownloadStarted(EventArgs.Empty);
-                var url = new System.Uri(this.Video.DownloadUrl);
+            await ExecuteAsync(CancellationToken.None, null);
+        }
 
-                StorageFile destinationFile
-                  = await KnownFolders.SavedPictures.CreateFileAsync(this.Video.Title + ".mp4",
-                      CreationCollisionOption.GenerateUniqueName);
+        public override async Task ExecuteAsync(CancellationToken tokenCancel)
+        {
+            await ExecuteAsync(tokenCancel, null);
+        }
 
-                var httpClient = new HttpClient();
-                var response = await httpClient.GetAsync(url);
-                
-                if (response.IsSuccessStatusCode)
+        public override async Task ExecuteAsync(IProgress<int> progress)
+        {
+            await ExecuteAsync(CancellationToken.None, progress);
+        }
+
+        public override async Task ExecuteAsync(CancellationToken tokenCancel, IProgress<int> progress)
+        {
+            var url = new System.Uri(this.Video.DownloadUrl);
+
+            StorageFile destinationFile
+              = await KnownFolders.SavedPictures.CreateFileAsync(this.Video.Title + ".mp4",
+                  CreationCollisionOption.GenerateUniqueName);
+
+            var httpClient = new Windows.Web.Http.HttpClient();
+            var response = await httpClient.GetAsync(url, Windows.Web.Http.HttpCompletionOption.ResponseHeadersRead);
+            var fs = await destinationFile.OpenAsync(FileAccessMode.ReadWrite);
+
+            IInputStream inputStream = await response.Content.ReadAsInputStreamAsync();
+            ulong totalBytesRead = 0;
+            double totalBytes = (double)response.Content.Headers.ContentLength.Value;
+            int percentualAnterior = 0;
+            while (true)
+            {
+                // Read from the web.
+                IBuffer buffer = new Windows.Storage.Streams.Buffer(1024);
+                buffer = await inputStream.ReadAsync(
+                    buffer,
+                    buffer.Capacity,
+                    InputStreamOptions.None);
+
+                if (buffer.Length == 0)
                 {
-                    var file = await response.Content.ReadAsByteArrayAsync();
-
-                    Windows.Storage.Streams.IRandomAccessStream stream = await destinationFile.OpenAsync(FileAccessMode.ReadWrite);
-                    IOutputStream output = stream.GetOutputStreamAt(0);
-
-                    DataWriter writer = new DataWriter(output);
-                    writer.WriteBytes(file);
-                    await writer.StoreAsync();
-                    await output.FlushAsync();
+                    // There is nothing else to read.
+                    break;
                 }
+                
+                // Report progress.
+                totalBytesRead += buffer.Length;
+                int percentual = (int)((totalBytesRead / totalBytes) * 100);
+                if (progress != null && percentual != percentualAnterior)
+                    progress.Report(percentual);
+
+                percentualAnterior = percentual;
+                // Write to file.
+                await fs.WriteAsync(buffer);
             }
-            catch (Exception ex)
-            {
-                this.OnDownloadFinished(EventArgs.Empty);
-            }
-            this.OnDownloadFinished(EventArgs.Empty);
+            inputStream.Dispose();
+            fs.Dispose();
+
         }
-
-        private void DownloadProgress(DownloadOperation download)
-        {
-            double percent = 100;
-            if (download.Progress.TotalBytesToReceive > 0)
-            {
-                percent = download.Progress.BytesReceived * 100 / download.Progress.TotalBytesToReceive;
-            }
-            if (this.DownloadProgressChanged != null)
-                this.DownloadProgressChanged(this, new ProgressEventArgs(percent));
-
-            if (percent>= 100)
-            {
-                download = null;
-            }
-        }
-
     }
 
 

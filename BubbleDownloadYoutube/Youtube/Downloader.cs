@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using YoutubeExtractor;
 
@@ -19,46 +20,24 @@ namespace BubbleDownloadYoutube.Youtube
         /// <param name="savePath">The path to save the video/audio.</param>
         /// /// <param name="bytesToDownload">An optional value to limit the number of bytes to download.</param>
         /// <exception cref="ArgumentNullException"><paramref name="video"/> or <paramref name="savePath"/> is <c>null</c>.</exception>
-        protected Downloader(VideoInfo video, int? bytesToDownload = null)
+        protected Downloader(VideoInfo video)
         {
             if (video == null)
                 throw new ArgumentNullException("video");
-            this.Video = video;
-            this.BytesToDownload = bytesToDownload;
+            this.Video = video;           
         }
-        /// <summary>
-        /// Occurs when the download finished.
-        /// </summary>
-        public event EventHandler DownloadFinished;
-        /// <summary>
-        /// Occurs when the download is starts.
-        /// </summary>
-        public event EventHandler DownloadStarted;
-        /// <summary>
-        /// Gets the number of bytes to download. <c>null</c>, if everything is downloaded.
-        /// </summary>
-        public int? BytesToDownload { get; private set; }
-        /// <summary>
-        /// Gets the video to download/convert.
-        /// </summary>
+      
         public VideoInfo Video { get; private set; }
         /// <summary>
         /// Starts the work of the <see cref="Downloader"/>.
         /// </summary>
-        public abstract void Execute();
-        protected void OnDownloadFinished(EventArgs e)
-        {
-            if (this.DownloadFinished != null)
-            {
-                this.DownloadFinished(this, e);
-            }
-        }
-        protected void OnDownloadStarted(EventArgs e)
-        {
-            if (this.DownloadStarted != null)
-            {
-                this.DownloadStarted(this, e);
-            }
-        }
+        public abstract Task ExecuteAsync();
+
+        public abstract Task ExecuteAsync(CancellationToken tokenCancel);
+
+        public abstract Task ExecuteAsync(IProgress<int> progress);
+
+        public abstract Task ExecuteAsync(CancellationToken tokenCancel, IProgress<int> progress);
+      
     }
 }
