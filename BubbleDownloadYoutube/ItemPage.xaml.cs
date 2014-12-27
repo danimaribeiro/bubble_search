@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using YoutubeExtractor;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
 
@@ -36,7 +37,7 @@ namespace BubbleDownloadYoutube
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += this.NavigationHelper_LoadState;
             this.navigationHelper.SaveState += this.NavigationHelper_SaveState;
-        } 
+        }
 
         /// <summary>
         /// Gets the <see cref="NavigationHelper"/> associated with this <see cref="Page"/>.
@@ -71,6 +72,24 @@ namespace BubbleDownloadYoutube
             // TODO: Create an appropriate data model for your problem domain to replace the sample data.
             var item = await YoutubeDataSource.GetItemAsync((string)e.NavigationParameter, "");
             this.DefaultViewModel["Item"] = item;
+            DownloadInfoVideo((string)e.NavigationParameter);
+        }
+
+        private async void DownloadInfoVideo(string uniqueId)
+        {
+            string url = "https://www.youtube.com/watch?v=" + uniqueId;
+            IEnumerable<VideoInfo> videoInfos = await DownloadUrlResolver.GetDownloadUrlsAsync(url);
+            foreach (VideoInfo videoInfo in videoInfos)
+            {
+                if (videoInfo.VideoType == YoutubeExtractor.VideoType.Mp4 && videoInfo.Resolution < 400)
+                {
+                    if (videoInfo.RequiresDecryption)
+                        DownloadUrlResolver.DecryptDownloadUrl(videoInfo);
+
+                    videoPreview.Source = new Uri(videoInfo.DownloadUrl);
+                    break;
+                }
+            }
         }
 
         /// <summary>

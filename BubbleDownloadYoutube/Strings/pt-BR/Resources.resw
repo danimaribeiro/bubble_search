@@ -118,36 +118,33 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddAppBarButton.Label" xml:space="preserve">
-    <value>Search</value>
+    <value>Pesquisar</value>
   </data>
   <data name="Header.Text" xml:space="preserve">
     <value>VideoForWhatsapp</value>
   </data>
   <data name="NavigationFailedExceptionMessage" xml:space="preserve">
-    <value>Navigation failed.</value>
+    <value>Navegação falhou</value>
   </data>
   <data name="NewItemTitle" xml:space="preserve">
-    <value>Item Title: {0}</value>
+    <value>Titulo: {0}</value>
   </data>
   <data name="Pivot.Title" xml:space="preserve">
     <value>VideoForWhatsapp</value>
   </data>
   <data name="PivotItem1.Header" xml:space="preserve">
-    <value>Search Results</value>
+    <value>Resultados</value>
   </data>
   <data name="PivotItem2.Header" xml:space="preserve">
-    <value>Downloading</value>
+    <value>Baixando</value>
   </data>
   <data name="PivotItem3.Header" xml:space="preserve">
-    <value>Downloaded</value>
+    <value>Baixados</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Pesquisar</value>
   </data>
   <data name="SecondaryButton1.Label" xml:space="preserve">
-    <value>secondary command 1</value>
-  </data>
-  <data name="SecondaryButton2.Label" xml:space="preserve">
-    <value>secondary command 2</value>
+    <value>segundo comando</value>
   </data>
 </root>

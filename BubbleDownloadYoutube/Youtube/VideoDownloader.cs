@@ -52,7 +52,7 @@ namespace BubbleDownloadYoutube.Youtube
                 var url = new System.Uri(this.Video.DownloadUrl);
 
                 StorageFile destinationFile
-                  = await KnownFolders.VideosLibrary.CreateFileAsync(this.Video.Title + ".mp4",
+                  = await KnownFolders.SavedPictures.CreateFileAsync(this.Video.Title + ".mp4",
                       CreationCollisionOption.GenerateUniqueName);
 
                 var httpClient = new HttpClient();

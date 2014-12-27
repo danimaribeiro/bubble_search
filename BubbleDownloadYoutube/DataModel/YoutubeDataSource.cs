@@ -37,13 +37,14 @@ namespace BubbleDownloadYoutube.Data
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public DownloadItem(String uniqueId, String titulo, String imagePath, String descricao, String content)
+        public DownloadItem(String uniqueId, String titulo, String imagePath, String descricao, String duracao, long visualizacoes)
         {
             this.UniqueId = uniqueId;
             this.Titulo = titulo;
             this.Descricao = descricao;
             this.ImagePath = imagePath;
-            this.Content = content;
+            this.Duracao = duracao;
+            this.Visualizacoes = visualizacoes;
             this.UrlDownload = "https://www.youtube.com/watch?v=" + uniqueId;
             this.Status = Estado.Aguardando;
         }
@@ -51,9 +52,9 @@ namespace BubbleDownloadYoutube.Data
         public string UniqueId { get; private set; }
         public string Titulo { get; private set; }
         public string Duracao { get; private set; }
+        public long Visualizacoes { get; private set; }
         public string Descricao { get; private set; }
         public string ImagePath { get; private set; }
-        public string Content { get; private set; }
         public string UrlDownload { get; private set; }
 
         private Estado status;
@@ -161,7 +162,7 @@ namespace BubbleDownloadYoutube.Data
             if (matches.Count() == 1) return matches.First();
             return null;
         }
-        
+
         private async Task SearchYoutubeVideosAsync(string consulta)
         {
             this.Groups.Clear();
@@ -177,23 +178,32 @@ namespace BubbleDownloadYoutube.Data
             // Call the search.list method to retrieve results matching the specified query term.
             var searchListResponse = await searchListRequest.ExecuteAsync();
 
+            var videosSearch = youtubeService.Videos.List("statistics,contentDetails");
+            videosSearch.Id = string.Join(",", searchListResponse.Items.Select(x => x.Id.VideoId).ToArray());
+            var videoListResponse = await videosSearch.ExecuteAsync();
 
             DownloadGrupos group = new DownloadGrupos("Group-1",
                                                             "Resultados", "Resultados da pesquisa");
 
+            int indice = 0;
             foreach (var searchResult in searchListResponse.Items)
             {
                 switch (searchResult.Id.Kind)
                 {
                     case "youtube#video":
+                        var info = videoListResponse.Items[indice];
+                        TimeSpan duracao = System.Xml.XmlConvert.ToTimeSpan(info.ContentDetails.Duration);
+                        
                         group.Items.Add(new DownloadItem(searchResult.Id.VideoId,
                                                   searchResult.Snippet.Title,
                                                   searchResult.Snippet.Thumbnails.Default.Url,
                                                   searchResult.Snippet.Description,
-                                                  ""));
+                                                  duracao.ToString(@"hh\:mm\:ss"),
+                                                  (long)info.Statistics.ViewCount.Value));
 
                         break;
                 }
+                indice++;
             }
             this.Groups.Add(group);
         }

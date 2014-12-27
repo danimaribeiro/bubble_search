@@ -33,16 +33,12 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock x:Uid="Header" Text="MY APPLICATION" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
-            <TextBlock Text="{Binding Title}" Style="{ThemeResource HeaderTextBlockStyle}" Margin="0,-6.5,0,26.5" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
+            <TextBlock x:Uid="Header" Text="VideoForWhatsApp" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
         </StackPanel>
 
-        <!-- 
-            TODO: Content should be placed within the following grid 
-                  to show details for the current item
-        -->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-
+            <MediaElement Name="videoPreview" Source="http://cdn.vidible.tv/prod/2014-08/05/53e1075ae4b07ee7365f29cf_300x168_v1.mp4" 
+                         AutoPlay="True" />
         </Grid>
     </Grid>
 </Page>
