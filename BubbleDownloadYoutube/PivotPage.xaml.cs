@@ -77,9 +77,13 @@ namespace BubbleDownloadYoutube
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
-        {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-
+        {            
+            var language = Windows.Media.SpeechRecognition.SpeechRecognizer.SystemSpeechLanguage;
+            int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
+            if (total == 0)
+            {
+                VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            }
         }
 
         /// <summary>
@@ -184,7 +188,7 @@ namespace BubbleDownloadYoutube
                         {
                             System.Diagnostics.Debug.WriteLine(indice);
                             Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                            {                              
+                            {
                                 prgDownload.Value = indice;
                             });
                         });
@@ -239,6 +243,43 @@ namespace BubbleDownloadYoutube
             catch (Exception ex)
             {
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+        }
+
+        private async void VoiceButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var language = Windows.Media.SpeechRecognition.SpeechRecognizer.SystemSpeechLanguage;
+                int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
+                if (total > 0)
+                {
+                    var speechRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+
+                    // Add a web search grammar to the recognizer.
+                    var webSearchGrammar = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                    Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation, "dictation");
+
+                    speechRecognizer.UIOptions.AudiblePrompt = "Say what you want to search for...";
+                    speechRecognizer.UIOptions.ExampleText = @"Ex. 'funny cats'";
+                    speechRecognizer.Constraints.Add(webSearchGrammar);
+
+                    // Compile the constraint.
+                    await speechRecognizer.CompileConstraintsAsync();
+
+                    // Start recognition.
+                    Windows.Media.SpeechRecognition.SpeechRecognitionResult speechRecognitionResult = await speechRecognizer.RecognizeWithUIAsync();
+                    //await speechRecognizer.RecognizeWithUIAsync();
+
+                    // Do something with the recognition result.
+                    txtConsulta.Text = speechRecognitionResult.Text;
+
+                    SearchBarButton_Click(sender, e);
+                }
+            }
+            catch (Exception ex)
+            {
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
         }

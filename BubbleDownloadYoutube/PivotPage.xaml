@@ -91,6 +91,8 @@
     <Page.BottomAppBar>
         <CommandBar>
             <AppBarButton x:Uid="AddAppBarButton" x:Name="SearchBarButton" Label="Search" Icon="World" Click="SearchBarButton_Click" />
+            <AppBarButton x:Uid="VoiceSearchButton" x:Name="VoiceButton" Label="Voice Search"
+                    Icon="Microphone" Click="VoiceButton_Click" />                          
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
