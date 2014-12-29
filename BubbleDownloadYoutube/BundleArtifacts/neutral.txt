@@ -1,0 +1,2 @@
+MainPackage=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\Release\BubbleDownloadYoutube_1.1.0.0_Bundle\BubbleDownloadYoutube_1.1.0.0_AnyCPU.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\Release\BubbleDownloadYoutube_1.1.0.0_Bundle\BubbleDownloadYoutube_1.1.0.0_language-pt.appx

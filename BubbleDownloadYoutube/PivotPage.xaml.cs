@@ -76,14 +76,15 @@ namespace BubbleDownloadYoutube
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
-        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
-        {            
+        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        {
             var language = Windows.Media.SpeechRecognition.SpeechRecognizer.SystemSpeechLanguage;
             int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
             if (total == 0)
             {
                 VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
+            await new DataModel.DatabaseRepository().Initialize();
         }
 
         /// <summary>
@@ -112,16 +113,7 @@ namespace BubbleDownloadYoutube
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
-        }
-
-        /// <summary>
-        /// Loads the content for the second pivot item when it is scrolled into view.
-        /// </summary>
-        private async void SecondPivot_Loaded(object sender, RoutedEventArgs e)
-        {
-            var sampleDataGroup = await YoutubeDataSource.GetGroupAsync("Group-2", txtConsulta.Text);
-            this.DefaultViewModel[SecondGroupName] = sampleDataGroup;
-        }
+        }               
 
         #region NavigationHelper registration
 
@@ -150,18 +142,49 @@ namespace BubbleDownloadYoutube
 
         #endregion
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Search_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteSearch();
+        }
+
+        private void SearchBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExecuteSearch();
+        }
+
+        private async void VoiceButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                var sampleDataGroup = await YoutubeDataSource.GetGroupAsync("Group-1", txtConsulta.Text);
-                this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                var language = Windows.Media.SpeechRecognition.SpeechRecognizer.SystemSpeechLanguage;
+                int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
+                if (total > 0)
+                {
+                    var speechRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+
+                    // Add a web search grammar to the recognizer.
+                    var webSearchGrammar = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
+                                    Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation, "dictation");
+
+                    speechRecognizer.UIOptions.AudiblePrompt = "Say what you want to search for...";
+                    speechRecognizer.UIOptions.ExampleText = @"Ex. 'funny cats'";
+                    speechRecognizer.Constraints.Add(webSearchGrammar);
+
+                    // Compile the constraint.
+                    await speechRecognizer.CompileConstraintsAsync();
+
+                    // Start recognition.
+                    Windows.Media.SpeechRecognition.SpeechRecognitionResult speechRecognitionResult = await speechRecognizer.RecognizeWithUIAsync();
+                    //await speechRecognizer.RecognizeWithUIAsync();
+
+                    // Do something with the recognition result.
+                    txtConsulta.Text = speechRecognitionResult.Text;
+
+                    ExecuteSearch();
+                }
             }
             catch (Exception ex)
             {
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
         }
@@ -199,6 +222,8 @@ namespace BubbleDownloadYoutube
                 }
                 prgDownload.IsIndeterminate = true;
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+
+                SaveState(item);
             }
             catch (TaskCanceledException cancel)
             {
@@ -212,32 +237,19 @@ namespace BubbleDownloadYoutube
             }
         }
 
-        public void videoDownloader_DownloadStarted(object sender, EventArgs e)
-        {
-            prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
-        }
-
-        public void videoDownloader_DownloadFinished(object sender, EventArgs e)
-        {
-            prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            VideoDownloader video = (VideoDownloader)sender;
-            video.ItemDownload.Status = Estado.Finalizado;
-        }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             DownloadItem item = (sender as Button).DataContext as DownloadItem;
             DownloadVideoToLibrary(item);
         }
-
-
-        private async void SearchBarButton_Click(object sender, RoutedEventArgs e)
+                
+        private async void ExecuteSearch()
         {
             try
             {
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
-                var sampleDataGroup = await YoutubeDataSource.GetGroupAsync("Group-1", txtConsulta.Text);
-                this.DefaultViewModel[FirstGroupName] = sampleDataGroup;
+                var searchResults = await YoutubeDataSource.GetSearchResultsAsync(txtConsulta.Text);
+                this.DefaultViewModel[FirstGroupName] = searchResults;
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
             catch (Exception ex)
@@ -247,41 +259,28 @@ namespace BubbleDownloadYoutube
             }
         }
 
-        private async void VoiceButton_Click(object sender, RoutedEventArgs e)
+        private async void SaveState(DownloadItem itemToSave)
         {
-            try
-            {
-                var language = Windows.Media.SpeechRecognition.SpeechRecognizer.SystemSpeechLanguage;
-                int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
-                if (total > 0)
-                {
-                    var speechRecognizer = new Windows.Media.SpeechRecognition.SpeechRecognizer();
+            string jsonItem = Newtonsoft.Json.JsonConvert.SerializeObject(itemToSave, Newtonsoft.Json.Formatting.None);
 
-                    // Add a web search grammar to the recognizer.
-                    var webSearchGrammar = new Windows.Media.SpeechRecognition.SpeechRecognitionTopicConstraint(
-                                    Windows.Media.SpeechRecognition.SpeechRecognitionScenario.Dictation, "dictation");
+            var video = new DataModel.VideosDataContext();
+            video.UniqueId = itemToSave.UniqueId;
+            video.JsonData = jsonItem;
+            video.CreatedAt = DateTime.Now;
 
-                    speechRecognizer.UIOptions.AudiblePrompt = "Say what you want to search for...";
-                    speechRecognizer.UIOptions.ExampleText = @"Ex. 'funny cats'";
-                    speechRecognizer.Constraints.Add(webSearchGrammar);
+            await new DataModel.DatabaseRepository().SaveVideo(video);
+        }
 
-                    // Compile the constraint.
-                    await speechRecognizer.CompileConstraintsAsync();
+        private void PivotItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            var downloadedGroup = YoutubeDataSource.GetDownloading();
+            this.DefaultViewModel[SecondGroupName] = downloadedGroup;
+        }
 
-                    // Start recognition.
-                    Windows.Media.SpeechRecognition.SpeechRecognitionResult speechRecognitionResult = await speechRecognizer.RecognizeWithUIAsync();
-                    //await speechRecognizer.RecognizeWithUIAsync();
-
-                    // Do something with the recognition result.
-                    txtConsulta.Text = speechRecognitionResult.Text;
-
-                    SearchBarButton_Click(sender, e);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
-            }
+        private async void PivotItem_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            var downloadedGroup = await YoutubeDataSource.GetDownloadedAsync();
+            this.DefaultViewModel[ThirdGroupName] = downloadedGroup;
         }
     }
 }

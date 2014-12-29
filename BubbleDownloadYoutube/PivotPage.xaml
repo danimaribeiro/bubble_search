@@ -37,7 +37,7 @@
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Uid="SearchBox" Name="txtConsulta" Grid.Column="0" PlaceholderText="Search" Margin="5,5,15,5" ></TextBox>
-                        <Button Grid.Column="1" BorderThickness="0" Click="Button_Click" Padding="0" MinHeight="0" MinWidth="0" Width="60" Height="45" HorizontalAlignment="Left">
+                        <Button Grid.Column="1" BorderThickness="0" Click="Button_Search_Click" Padding="0" MinHeight="0" MinWidth="0" Width="60" Height="45" HorizontalAlignment="Left">
                             <Button.Background>
                                 <ImageBrush Stretch="None" ImageSource="Assets/search.png"/>
                             </Button.Background>
@@ -85,12 +85,111 @@
 
             </PivotItem>
 
+            <!--Pivot item two-->
+            <PivotItem
+                x:Uid="PivotItem2"
+                Margin="19,10,0,4"
+                Header="Downloading"
+                DataContext="{Binding Downloading}"
+                d:DataContext="{Binding Groups[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:YoutubeDataSource}}"
+                CommonNavigationTransitionInfo.IsStaggerElement="True" Loaded="PivotItem_Loaded">
+                <!--Double line list with text wrapping-->
+                <StackPanel>
+                    <ListView IsItemClickEnabled="True" ItemClick="ItemView_ItemClick"
+                		ItemsSource="{Binding Items}" VerticalAlignment="Center" Height="385">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,0" Background="{Binding Cor}" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="300" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="{Binding ImagePath}" Stretch="Uniform" 
+                                        Width="100" Height="100" Margin="8,0,8,0"></Image>
+                                    <TextBlock  Text="{Binding Titulo}"
+                					    TextWrapping="Wrap" Grid.Column="2"  
+                					    Style="{ThemeResource ListViewItemContentTextBlockStyle}" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="18"
+                					/>
+
+                                    <TextBlock Text="Views:" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,0,25" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Duration:" Grid.Column="2" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,4" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+
+
+                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="2" VerticalAlignment="Bottom" Margin="50,0,0,27" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Duracao}" Grid.Column="2" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,6" />
+
+                                    <Button BorderThickness="0,0,0,0" Margin="0,4,0,0" Grid.Column="0" Click="Button_Click_1" 
+                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0"  >
+                                        <Button.Background>
+                                            <ImageBrush Stretch="Uniform" ImageSource="Assets/Download.png"/>
+                                        </Button.Background>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+
+            </PivotItem>
+
+            <!--Pivot item two-->
+            <PivotItem
+                x:Uid="PivotItem3"
+                Margin="19,10,0,4"
+                Header="Finished"
+                DataContext="{Binding Finished}"
+                d:DataContext="{Binding Groups[2], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:YoutubeDataSource}}"
+                CommonNavigationTransitionInfo.IsStaggerElement="True" Loaded="PivotItem_Loaded_1">
+                <!--Double line list with text wrapping-->
+                <StackPanel>
+                    <ListView IsItemClickEnabled="True" ItemClick="ItemView_ItemClick"
+                		ItemsSource="{Binding Items}" VerticalAlignment="Center" Height="385">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,0,0,0" Background="{Binding Cor}" HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="Auto" MinWidth="300" />
+                                    </Grid.ColumnDefinitions>
+                                    <Image Grid.Column="0" Source="{Binding ImagePath}" Stretch="Uniform" 
+                                        Width="100" Height="100" Margin="8,0,8,0"></Image>
+                                    <TextBlock  Text="{Binding Titulo}"
+                					    TextWrapping="Wrap" Grid.Column="2"  
+                					    Style="{ThemeResource ListViewItemContentTextBlockStyle}" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="18"
+                					/>
+
+                                    <TextBlock Text="Views:" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,0,25" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Duration:" Grid.Column="2" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,4" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+
+
+                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="2" VerticalAlignment="Bottom" Margin="50,0,0,27" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Duracao}" Grid.Column="2" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,6" />
+
+                                    <Button BorderThickness="0,0,0,0" Margin="0,4,0,0" Grid.Column="0" Click="Button_Click_1" 
+                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0"  >
+                                        <Button.Background>
+                                            <ImageBrush Stretch="Uniform" ImageSource="Assets/Download.png"/>
+                                        </Button.Background>
+                                    </Button>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                </StackPanel>
+            </PivotItem>
         </Pivot>
+        
     </Grid>
 
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton x:Uid="AddAppBarButton" x:Name="SearchBarButton" Label="Search" Icon="World" Click="SearchBarButton_Click" />
+            <AppBarButton x:Uid="AddAppBarButton" x:Name="SearchBarButton" Label="Search" Icon="Find" Click="SearchBarButton_Click" />
             <AppBarButton x:Uid="VoiceSearchButton" x:Name="VoiceButton" Label="Voice Search"
                     Icon="Microphone" Click="VoiceButton_Click" />                          
         </CommandBar>

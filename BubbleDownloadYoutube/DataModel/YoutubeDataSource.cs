@@ -26,7 +26,8 @@ namespace BubbleDownloadYoutube.Data
         Aguardando = 0,
         Downloading = 1,
         Finalizado = 2,
-        Erro = 3
+        Erro = 3,
+        Cancelado = 4
     }
 
     /// <summary>
@@ -55,6 +56,7 @@ namespace BubbleDownloadYoutube.Data
         public long Visualizacoes { get; private set; }
         public string Descricao { get; private set; }
         public string ImagePath { get; private set; }
+        public string LocalPath { get; private set; }
         public string UrlDownload { get; private set; }
 
         private Estado status;
@@ -103,17 +105,22 @@ namespace BubbleDownloadYoutube.Data
     /// </summary>
     public class DownloadGrupos
     {
-        public DownloadGrupos(String uniqueId, String titulo, String descricao)
+        public DownloadGrupos(String uniqueId, String titulo)
         {
             this.UniqueId = uniqueId;
             this.Titulo = titulo;
-            this.Descricao = descricao;
             this.Items = new ObservableCollection<DownloadItem>();
+        }
+
+        public DownloadGrupos(String uniqueId, String titulo, ObservableCollection<DownloadItem> items)
+        {
+            this.UniqueId = uniqueId;
+            this.Titulo = titulo;
+            this.Items = items;
         }
 
         public string UniqueId { get; private set; }
         public string Titulo { get; private set; }
-        public string Descricao { get; private set; }
         public ObservableCollection<DownloadItem> Items { get; private set; }
 
         public override string ToString()
@@ -138,35 +145,69 @@ namespace BubbleDownloadYoutube.Data
             get { return this._groups; }
         }
 
-        public static async Task<IEnumerable<DownloadGrupos>> GetGroupsAsync(string consulta)
+        public static void InitializeGroups()
         {
-            await _sampleDataSource.SearchYoutubeVideosAsync(consulta);
-
-            return _sampleDataSource.Groups;
+            _sampleDataSource.Groups.Add(new DownloadGrupos("SearchResults", "Search Results"));
+            _sampleDataSource.Groups.Add(new DownloadGrupos("Downloading", "Downloading"));
+            _sampleDataSource.Groups.Add(new DownloadGrupos("Finished", "Finished"));
         }
 
-        public static async Task<DownloadGrupos> GetGroupAsync(string uniqueId, string consulta)
+        public static async Task<DownloadGrupos> GetSearchResultsAsync(string consulta)
         {
-            await _sampleDataSource.SearchYoutubeVideosAsync(consulta);
-            // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Groups.Where((group) => group.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
+            var itemsDownloaded = await _sampleDataSource.SearchYoutubeVideosAsync(consulta);
+            foreach (var item in itemsDownloaded)
+            {
+                _sampleDataSource.Groups[0].Items.Add(item);
+            }
+            return _sampleDataSource.Groups[0];
         }
 
-        public static async Task<DownloadItem> GetItemAsync(string uniqueId, string consulta)
+        public static DownloadGrupos GetDownloading()
         {
-            await _sampleDataSource.SearchYoutubeVideosAsync(consulta);
-            // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Groups.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
+            return _sampleDataSource.Groups[1];
         }
 
-        private async Task SearchYoutubeVideosAsync(string consulta)
+        public static async Task<DownloadGrupos> GetDownloadedAsync()
         {
-            this.Groups.Clear();
+            var itemsDownloaded = await _sampleDataSource.GetDownloadedGroup();
+            foreach (var item in itemsDownloaded)
+            {
+                _sampleDataSource.Groups[2].Items.Add(item);
+            }
+            return _sampleDataSource.Groups[2];
+        }
 
+        public async Task<IEnumerable<DownloadItem>> GetDownloadedGroup()
+        {
+            var videoRepository = new DataModel.DatabaseRepository();
+            var videos = await videoRepository.LoadCurrentVideos();
+            var itemsDownloaded = new List<DownloadItem>();
+            var itemsToDelete = new List<DataModel.VideosDataContext>();
+
+            foreach (var item in videos)
+            {
+                DownloadItem download = (DownloadItem)Newtonsoft.Json.JsonConvert.DeserializeObject(item.JsonData, typeof(DownloadItem));
+                try
+                {
+                    var file = await Windows.Storage.KnownFolders.PicturesLibrary.GetFileAsync(download.LocalPath);
+                    itemsDownloaded.Add(download);
+                }
+                catch (Exception)
+                {
+                    itemsToDelete.Add(item);
+                }
+            }
+            itemsToDelete.AddRange(videos.Skip(25));
+            foreach (var item in itemsToDelete)
+            {
+                await videoRepository.DeleteVideo(item);
+            }
+            return itemsDownloaded.Take(25);
+        }
+
+
+        private async Task<IEnumerable<DownloadItem>> SearchYoutubeVideosAsync(string consulta)
+        {
             var youtubeService = new YouTubeService(new BaseClientService.Initializer()
             {
                 ApiKey = "AIzaSyA4MHKy150YypY9LzPQNXTCvEgteDrBL8U",
@@ -182,9 +223,7 @@ namespace BubbleDownloadYoutube.Data
             videosSearch.Id = string.Join(",", searchListResponse.Items.Select(x => x.Id.VideoId).ToArray());
             var videoListResponse = await videosSearch.ExecuteAsync();
 
-            DownloadGrupos group = new DownloadGrupos("Group-1",
-                                                            "Resultados", "Resultados da pesquisa");
-
+            var result = new List<DownloadItem>();
             int indice = 0;
             foreach (var searchResult in searchListResponse.Items)
             {
@@ -193,8 +232,8 @@ namespace BubbleDownloadYoutube.Data
                     case "youtube#video":
                         var info = videoListResponse.Items[indice];
                         TimeSpan duracao = System.Xml.XmlConvert.ToTimeSpan(info.ContentDetails.Duration);
-                        
-                        group.Items.Add(new DownloadItem(searchResult.Id.VideoId,
+
+                        result.Add(new DownloadItem(searchResult.Id.VideoId,
                                                   searchResult.Snippet.Title,
                                                   searchResult.Snippet.Thumbnails.Default.Url,
                                                   searchResult.Snippet.Description,
@@ -205,7 +244,7 @@ namespace BubbleDownloadYoutube.Data
                 }
                 indice++;
             }
-            this.Groups.Add(group);
+            return result;
         }
     }
 }

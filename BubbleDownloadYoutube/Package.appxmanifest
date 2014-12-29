@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="51658danimaribeiro.VideoForWhatsapp" Publisher="CN=3D27F321-3B58-4069-B9E2-F55ED0155954" Version="1.0.0.0" />
+  <Identity Name="51658danimaribeiro.VideoForWhatsapp" Publisher="CN=3D27F321-3B58-4069-B9E2-F55ED0155954" Version="1.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="b03f3c60-c704-414b-aaa6-32c415510738" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>VideoForWhatsapp</DisplayName>
