@@ -51,30 +51,30 @@
                             <DataTemplate>
                                 <Grid Margin="0,0,0,0" Background="{Binding Cor}" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="110"/>
                                         <ColumnDefinition Width="Auto" MinWidth="300" />
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{Binding ImagePath}" Stretch="Uniform" 
-                                        Width="100" Height="100" Margin="8,0,8,0"></Image>
+                                        Width="100" Height="100" Margin="0,0,8,0" HorizontalAlignment="Left"></Image>
                                     <TextBlock  Text="{Binding Titulo}"
                 					    TextWrapping="Wrap" Grid.Column="2"  
                 					    Style="{ThemeResource ListViewItemContentTextBlockStyle}" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="18"
                 					/>
 
-                                    <TextBlock Text="Views:" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,0,25" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
-                                    <TextBlock Text="Duration:" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,4" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Views:" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,39" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Duration:" Grid.Column="1" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,20" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
 
 
-                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="2" VerticalAlignment="Bottom" Margin="50,0,0,27" HorizontalAlignment="Left" />
-                                    <TextBlock Text="{Binding Duracao}" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,6" />                                    
+                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="1" VerticalAlignment="Bottom" Margin="50,0,0,41" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Duracao}" Grid.Column="1" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,22" />                                    
                                     
-                                    <Button BorderThickness="0,0,0,0" Margin="0,4,0,0" Grid.Column="0" Click="Button_Click_1" 
-                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0"  >
+                                    <Button BorderThickness="1" Margin="25,22,25,18" Grid.Column="0" Click="DownloadButton_Click" 
+                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0" BorderBrush="{ThemeResource HyperlinkPointerOverForegroundThemeBrush}" >
                                         <Button.Background>
                                             <ImageBrush Stretch="Uniform" ImageSource="Assets/Download.png"/>
-                                        </Button.Background>
+                                        </Button.Background>	                                        
                                     </Button>
                                 </Grid>
                             </DataTemplate>
@@ -101,31 +101,24 @@
                             <DataTemplate>
                                 <Grid Margin="0,0,0,0" Background="{Binding Cor}" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="110"/>
                                         <ColumnDefinition Width="Auto" MinWidth="300" />
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{Binding ImagePath}" Stretch="Uniform" 
-                                        Width="100" Height="100" Margin="8,0,8,0"></Image>
+                                        Width="100" Height="100" HorizontalAlignment="Left"/>
                                     <TextBlock  Text="{Binding Titulo}"
                 					    TextWrapping="Wrap" Grid.Column="2"  
                 					    Style="{ThemeResource ListViewItemContentTextBlockStyle}" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="18"
                 					/>
 
-                                    <TextBlock Text="Views:" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,0,25" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
-                                    <TextBlock Text="Duration:" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,4" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Views:" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,39" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Duration:" Grid.Column="1" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,18" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
 
 
-                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="2" VerticalAlignment="Bottom" Margin="50,0,0,27" HorizontalAlignment="Left" />
-                                    <TextBlock Text="{Binding Duracao}" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,6" />
-
-                                    <Button BorderThickness="0,0,0,0" Margin="0,4,0,0" Grid.Column="0" Click="Button_Click_1" 
-                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0"  >
-                                        <Button.Background>
-                                            <ImageBrush Stretch="Uniform" ImageSource="Assets/Download.png"/>
-                                        </Button.Background>
-                                    </Button>
+                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="1" VerticalAlignment="Bottom" Margin="50,0,0,41" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Duracao}" Grid.Column="1" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="70,0,0,22" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -151,31 +144,24 @@
                             <DataTemplate>
                                 <Grid Margin="0,0,0,0" Background="{Binding Cor}" HorizontalAlignment="Stretch">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="100"/>
+                                        <ColumnDefinition Width="110"/>
                                         <ColumnDefinition Width="Auto" MinWidth="300" />
                                     </Grid.ColumnDefinitions>
                                     <Image Grid.Column="0" Source="{Binding ImagePath}" Stretch="Uniform" 
-                                        Width="100" Height="100" Margin="8,0,8,0"></Image>
+                                        Width="100" Height="100" HorizontalAlignment="Left"/>
                                     <TextBlock  Text="{Binding Titulo}"
                 					    TextWrapping="Wrap" Grid.Column="2"  
                 					    Style="{ThemeResource ListViewItemContentTextBlockStyle}" VerticalAlignment="Top" Margin="0,12,0,0" FontSize="18"
                 					/>
 
-                                    <TextBlock Text="Views:" Grid.Column="2" VerticalAlignment="Bottom" Margin="0,0,0,25" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
-                                    <TextBlock Text="Duration:" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,4" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Views:" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,0,35" HorizontalAlignment="Left" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
+                                    <TextBlock Text="Duration:" Grid.Column="1" 
+                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,16" Style="{StaticResource ListViewItemSubheaderTextBlockStyle}" />
 
 
-                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="2" VerticalAlignment="Bottom" Margin="50,0,0,27" HorizontalAlignment="Left" />
-                                    <TextBlock Text="{Binding Duracao}" Grid.Column="2" 
-                                               VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,6" />
-
-                                    <Button BorderThickness="0,0,0,0" Margin="0,4,0,0" Grid.Column="0" Click="Button_Click_1" 
-                                        Width="60" Height="60" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0" MinWidth="0" MinHeight="0"  >
-                                        <Button.Background>
-                                            <ImageBrush Stretch="Uniform" ImageSource="Assets/Download.png"/>
-                                        </Button.Background>
-                                    </Button>
+                                    <TextBlock Text="{Binding Visualizacoes}" Grid.Column="1" VerticalAlignment="Bottom" Margin="50,0,0,39" HorizontalAlignment="Left" />
+                                    <TextBlock Text="{Binding Duracao}" Grid.Column="1" 
+                                              VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="68,0,0,18" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>

@@ -237,7 +237,7 @@ namespace BubbleDownloadYoutube
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
             DownloadItem item = (sender as Button).DataContext as DownloadItem;
             DownloadVideoToLibrary(item);
