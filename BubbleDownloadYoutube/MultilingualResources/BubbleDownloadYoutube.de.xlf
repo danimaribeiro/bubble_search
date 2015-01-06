@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="de" original="BubbleDownloadYoutube_Multilingual.prilog.xml" tool-id="MultilingualAppToolkit" product-name="BubbleDownloadYoutube" product-version="1.0.0.0" build-num="0">
+    <header>
+      <tool tool-id="MultilingualAppToolkit" tool-name="Multilingual App Toolkit" tool-version="3.1.1250.0" tool-company="Microsoft" />
+    </header>
+    <body>
+      <group id="Resources">
+        <trans-unit id="Resources\VoiceSearchButton\Label" translate="yes" xml:space="preserve">
+          <source>Voice Search</source>
+          <target state="signed-off">Sprachsuche</target>
+        </trans-unit>
+        <trans-unit id="Resources\SearchBox\PlaceholderText" translate="yes" xml:space="preserve">
+          <source>Search</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Suche</target>
+        </trans-unit>
+        <trans-unit id="Resources\PivotItemSearch\Header" translate="yes" xml:space="preserve">
+          <source>Search Results</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Suchergebnisse</target>
+        </trans-unit>
+        <trans-unit id="Resources\PivotItemFinished\Header" translate="yes" xml:space="preserve">
+          <source>Finished</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Fertig gestellt</target>
+        </trans-unit>
+        <trans-unit id="Resources\PivotItemDownloading\Header" translate="yes" xml:space="preserve">
+          <source>Downloading</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Herunterladen</target>
+        </trans-unit>
+        <trans-unit id="Resources\Pivot\Title" translate="yes" xml:space="preserve">
+          <source>VideoForWhatsapp</source>
+          <target state="signed-off">Video for Whatsapp</target>
+        </trans-unit>
+        <trans-unit id="Resources\NewItemTitle" translate="yes" xml:space="preserve">
+          <source>Item Title: {0}</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Titel: {0}</target>
+        </trans-unit>
+        <trans-unit id="Resources\NavigationFailedExceptionMessage" translate="yes" xml:space="preserve">
+          <source>Navigation failed.</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Fehler bei Navigation.</target>
+        </trans-unit>
+        <trans-unit id="Resources\Header\Text" translate="yes" xml:space="preserve">
+          <source>VideoForWhatsapp</source>
+          <target state="signed-off">Video for Whatsapp</target>
+        </trans-unit>
+        <trans-unit id="Resources\ClearItemsAppBarButton\Label" translate="yes" xml:space="preserve">
+          <source>Clear</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Löschen</target>
+        </trans-unit>
+        <trans-unit id="Resources\AddAppBarButton\Label" translate="yes" xml:space="preserve">
+          <source>Search</source>
+          <target state="signed-off" state-qualifier="mt-suggestion">Suche</target>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>

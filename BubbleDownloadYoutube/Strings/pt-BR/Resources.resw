@@ -120,6 +120,9 @@
   <data name="AddAppBarButton.Label" xml:space="preserve">
     <value>Pesquisar</value>
   </data>
+  <data name="ClearItemsAppBarButton.Label" xml:space="preserve">
+    <value>Limpar itens</value>
+  </data>
   <data name="Header.Text" xml:space="preserve">
     <value>VideoForWhatsapp</value>
   </data>
@@ -130,21 +133,21 @@
     <value>Titulo: {0}</value>
   </data>
   <data name="Pivot.Title" xml:space="preserve">
-    <value>VideoForWhatsapp</value>
+    <value>Video for Whatsapp</value>
   </data>
-  <data name="PivotItem1.Header" xml:space="preserve">
-    <value>Resultados</value>
-  </data>
-  <data name="PivotItem2.Header" xml:space="preserve">
+  <data name="PivotItemDownloading.Header" xml:space="preserve">
     <value>Baixando</value>
   </data>
-  <data name="PivotItem3.Header" xml:space="preserve">
-    <value>Baixados</value>
+  <data name="PivotItemFinished.Header" xml:space="preserve">
+    <value>Finalizados</value>
+  </data>
+  <data name="PivotItemSearch.Header" xml:space="preserve">
+    <value>Resultados</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
     <value>Pesquisar</value>
   </data>
-  <data name="SecondaryButton1.Label" xml:space="preserve">
-    <value>segundo comando</value>
+  <data name="VoiceSearchButton.Label" xml:space="preserve">
+    <value>Pesquisa por voz</value>
   </data>
 </root>

@@ -20,10 +20,12 @@
     </Page.Transitions>
 
     <Grid>
-        <Pivot x:Uid="Pivot" Title="Bubblesort - Download" x:Name="pivot" CommonNavigationTransitionInfo.IsStaggerElement="True">
+        <Pivot x:Uid="Pivot" Title="Video for WhatsApp" x:Name="pivot"
+               CommonNavigationTransitionInfo.IsStaggerElement="True" SelectionChanged="pivot_SelectionChanged">
             <!--Pivot item one-->
             <PivotItem
-                x:Uid="PivotItem1"
+                x:Uid="PivotItemSearch"
+                x:Name="PivotItemSearch"
                 Margin="19,10,0,4"
                 Header="Search"
                 DataContext="{Binding SearchResult}"
@@ -43,7 +45,7 @@
                             </Button.Background>
                         </Button>
                     </Grid>
-                    <ProgressBar Name="prgDownload" Visibility="Collapsed" IsIndeterminate="True" Height="10" />
+                    <ProgressBar Name="prgSearch" Visibility="Collapsed" IsIndeterminate="True" Height="10" />
 
                     <ListView IsItemClickEnabled="True" ItemClick="ItemView_ItemClick"
                 		ItemsSource="{Binding Items}" VerticalAlignment="Center" Height="385">
@@ -87,7 +89,8 @@
 
             <!--Pivot item two-->
             <PivotItem
-                x:Uid="PivotItem2"
+                x:Uid="PivotItemDownloading"
+                x:Name="PivotItemDownloading"
                 Margin="19,10,0,4"
                 Header="Downloading"
                 DataContext="{Binding Downloading}"
@@ -95,6 +98,8 @@
                 CommonNavigationTransitionInfo.IsStaggerElement="True" Loaded="PivotItem_Loaded">
                 <!--Double line list with text wrapping-->
                 <StackPanel>
+                    <ProgressBar Name="prgDownload" Visibility="Collapsed" Height="10" />
+                    
                     <ListView IsItemClickEnabled="True" ItemClick="ItemView_ItemClick"
                 		ItemsSource="{Binding Items}" VerticalAlignment="Center" Height="385">
                         <ListView.ItemTemplate>
@@ -130,9 +135,10 @@
 
             <!--Pivot item two-->
             <PivotItem
-                x:Uid="PivotItem3"
+                x:Uid="PivotItemFinished"
+                x:Name="PivotItemFinished"
                 Margin="19,10,0,4"
-                Header="Finished"
+                Header="Finished"                
                 DataContext="{Binding Finished}"
                 d:DataContext="{Binding Groups[2], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:YoutubeDataSource}}"
                 CommonNavigationTransitionInfo.IsStaggerElement="True" Loaded="PivotItem_Loaded_1">
@@ -167,17 +173,19 @@
                         </ListView.ItemTemplate>
                     </ListView>
 
-                </StackPanel>
+                </StackPanel>                                
             </PivotItem>
         </Pivot>
         
     </Grid>
 
     <Page.BottomAppBar>
-        <CommandBar>
+        <CommandBar >
             <AppBarButton x:Uid="AddAppBarButton" x:Name="SearchBarButton" Label="Search" Icon="Find" Click="SearchBarButton_Click" />
             <AppBarButton x:Uid="VoiceSearchButton" x:Name="VoiceButton" Label="Voice Search"
-                    Icon="Microphone" Click="VoiceButton_Click" />                          
+                    Icon="Microphone" Click="VoiceButton_Click" />   
+            <AppBarButton x:Uid="ClearItemsAppBarButton" x:Name="ClearItemsButton" Label="Clear" Icon="Delete" 
+                    Click="ClearItemsButton_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

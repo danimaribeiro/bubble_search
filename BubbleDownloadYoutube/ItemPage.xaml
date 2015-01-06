@@ -37,7 +37,7 @@
         </StackPanel>
 
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
-            <MediaElement Name="videoPreview" Source="http://cdn.vidible.tv/prod/2014-08/05/53e1075ae4b07ee7365f29cf_300x168_v1.mp4" 
+            <MediaElement Name="videoPreview" 
                          AutoPlay="True" />
         </Grid>
     </Grid>

@@ -35,5 +35,10 @@ namespace BubbleDownloadYoutube.DataModel
             await Connect.DeleteAsync(video);
         }
 
+        public async Task DeleteAll()
+        {
+            await Connect.ExecuteAsync("delete from Videos;");
+        }
+
     }
 }

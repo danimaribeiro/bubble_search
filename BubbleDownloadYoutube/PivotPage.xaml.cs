@@ -33,6 +33,8 @@ namespace BubbleDownloadYoutube
         private const string SecondGroupName = "Downloading";
         private const string ThirdGroupName = "Finished";
 
+        private bool _ShowVoiceSearch = false;
+
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -82,8 +84,10 @@ namespace BubbleDownloadYoutube
             int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
             if (total == 0)
             {
+                _ShowVoiceSearch = true;
                 VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
+            YoutubeDataSource.InitializeGroups();
             await new DataModel.DatabaseRepository().Initialize();
         }
 
@@ -113,7 +117,7 @@ namespace BubbleDownloadYoutube
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
-        }               
+        }
 
         #region NavigationHelper registration
 
@@ -193,8 +197,7 @@ namespace BubbleDownloadYoutube
         {
             try
             {
-                item.Status = Estado.Downloading;
-                prgDownload.IsIndeterminate = false;
+                YoutubeDataSource.MarkItemAsDownloading(item);
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 prgDownload.Value = 0;
 
@@ -216,13 +219,13 @@ namespace BubbleDownloadYoutube
                             });
                         });
                         await videoDownloader.ExecuteAsync(progress);
-                        item.Status = Estado.Finalizado;
                         break;
                     }
                 }
                 prgDownload.IsIndeterminate = true;
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
+                YoutubeDataSource.MarkItemAsFinished(item);
                 SaveState(item);
             }
             catch (TaskCanceledException cancel)
@@ -239,18 +242,27 @@ namespace BubbleDownloadYoutube
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            DownloadItem item = (sender as Button).DataContext as DownloadItem;
-            DownloadVideoToLibrary(item);
+            try
+            {
+                pivot.SelectedIndex = 2;
+                DownloadItem item = (sender as Button).DataContext as DownloadItem;
+                DownloadVideoToLibrary(item);
+                pivot.SelectedIndex = 1;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
         }
-                
+
         private async void ExecuteSearch()
         {
             try
             {
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                prgSearch.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 var searchResults = await YoutubeDataSource.GetSearchResultsAsync(txtConsulta.Text);
                 this.DefaultViewModel[FirstGroupName] = searchResults;
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                prgSearch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -281,6 +293,43 @@ namespace BubbleDownloadYoutube
         {
             var downloadedGroup = await YoutubeDataSource.GetDownloadedAsync();
             this.DefaultViewModel[ThirdGroupName] = downloadedGroup;
+        }
+
+        private async void ClearItemsButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await new DataModel.DatabaseRepository().DeleteAll();
+                YoutubeDataSource.ClearFinished();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+        }
+
+        private void pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (((Pivot)sender).SelectedIndex)
+            {
+                case 0:
+                    SearchBarButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    if (_ShowVoiceSearch)
+                        VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    break;
+
+                case 1:
+                    SearchBarButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    break;
+                case 2:
+                    SearchBarButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    break;
+            }
         }
     }
 }

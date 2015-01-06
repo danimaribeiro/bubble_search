@@ -48,6 +48,7 @@ namespace BubbleDownloadYoutube.Data
             this.Visualizacoes = visualizacoes;
             this.UrlDownload = "https://www.youtube.com/watch?v=" + uniqueId;
             this.Status = Estado.Aguardando;
+            this.LocalPath = titulo + ".mp4";
         }
 
         public string UniqueId { get; private set; }
@@ -155,6 +156,7 @@ namespace BubbleDownloadYoutube.Data
         public static async Task<DownloadGrupos> GetSearchResultsAsync(string consulta)
         {
             var itemsDownloaded = await _sampleDataSource.SearchYoutubeVideosAsync(consulta);
+            _sampleDataSource.Groups[0].Items.Clear();
             foreach (var item in itemsDownloaded)
             {
                 _sampleDataSource.Groups[0].Items.Add(item);
@@ -170,11 +172,31 @@ namespace BubbleDownloadYoutube.Data
         public static async Task<DownloadGrupos> GetDownloadedAsync()
         {
             var itemsDownloaded = await _sampleDataSource.GetDownloadedGroup();
+            _sampleDataSource.Groups[2].Items.Clear();
             foreach (var item in itemsDownloaded)
             {
                 _sampleDataSource.Groups[2].Items.Add(item);
             }
             return _sampleDataSource.Groups[2];
+        }
+
+        public static void MarkItemAsDownloading(DownloadItem item)
+        {
+            item.Status = Estado.Downloading;
+            _sampleDataSource._groups[0].Items.Remove(item);
+            _sampleDataSource._groups[1].Items.Add(item);
+        }
+
+        public static void MarkItemAsFinished(DownloadItem item)
+        {
+            item.Status = Estado.Finalizado;
+            _sampleDataSource._groups[1].Items.Remove(item);
+            _sampleDataSource._groups[2].Items.Add(item);
+        }
+
+        public static void ClearFinished()
+        {
+            _sampleDataSource._groups[2].Items.Clear();
         }
 
         public async Task<IEnumerable<DownloadItem>> GetDownloadedGroup()
@@ -189,7 +211,7 @@ namespace BubbleDownloadYoutube.Data
                 DownloadItem download = (DownloadItem)Newtonsoft.Json.JsonConvert.DeserializeObject(item.JsonData, typeof(DownloadItem));
                 try
                 {
-                    var file = await Windows.Storage.KnownFolders.PicturesLibrary.GetFileAsync(download.LocalPath);
+                    var file = await Windows.Storage.KnownFolders.SavedPictures.GetFileAsync(download.LocalPath);
                     itemsDownloaded.Add(download);
                 }
                 catch (Exception)
