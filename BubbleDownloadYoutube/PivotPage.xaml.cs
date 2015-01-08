@@ -13,6 +13,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -330,6 +331,11 @@ namespace BubbleDownloadYoutube
                     ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
                     break;
             }
+        }
+
+        private async void buttonRate_Click(object sender, RoutedEventArgs e)
+        {
+            await Launcher.LaunchUriAsync(new Uri("ms-windows-store:reviewapp?appid=cab01d26-b576-48f9-96db-75ec30a12a34"));
         }
     }
 }

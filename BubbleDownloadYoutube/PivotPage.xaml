@@ -175,6 +175,19 @@
 
                 </StackPanel>                                
             </PivotItem>
+
+            <PivotItem x:Uid="PivotItemAbout"
+                x:Name="PivotItemAbout"
+                Margin="19,10,0,4"
+                Header="About"                                              
+                CommonNavigationTransitionInfo.IsStaggerElement="True">
+                <!--Double line list with text wrapping-->
+                <StackPanel>
+                    <TextBlock Style="{StaticResource BodyTextBlockStyle}">Please help rating the app if you like!</TextBlock>
+                    <Button Name="buttonRate" Click="buttonRate_Click">Rate this app</Button>
+                </StackPanel>
+            </PivotItem>
+
         </Pivot>
         
     </Grid>

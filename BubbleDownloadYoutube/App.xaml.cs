@@ -35,7 +35,7 @@ namespace BubbleDownloadYoutube
         public App()
         {
             this.InitializeComponent();
-            this.Suspending += this.OnSuspending;
+            this.Suspending += this.OnSuspending;            
         }
 
         /// <summary>
