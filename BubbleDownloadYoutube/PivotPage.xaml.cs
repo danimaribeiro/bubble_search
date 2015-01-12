@@ -34,7 +34,7 @@ namespace BubbleDownloadYoutube
         private const string SecondGroupName = "Downloading";
         private const string ThirdGroupName = "Finished";
 
-        private bool _ShowVoiceSearch = false;
+        private bool _ShowVoiceSearch = true;
 
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
@@ -85,7 +85,7 @@ namespace BubbleDownloadYoutube
             int total = Windows.Media.SpeechRecognition.SpeechRecognizer.SupportedTopicLanguages.Count(x => x.LanguageTag == language.LanguageTag);
             if (total == 0)
             {
-                _ShowVoiceSearch = true;
+                _ShowVoiceSearch = false;
                 VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             }
             YoutubeDataSource.InitializeGroups();
@@ -194,7 +194,7 @@ namespace BubbleDownloadYoutube
             }
         }
 
-        private async void DownloadVideoToLibrary(Data.DownloadItem item)
+        private async Task DownloadVideoToLibrary(Data.DownloadItem item)
         {
             try
             {
@@ -227,7 +227,7 @@ namespace BubbleDownloadYoutube
                 prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
                 YoutubeDataSource.MarkItemAsFinished(item);
-                SaveState(item);
+                await SaveState(item);
             }
             catch (TaskCanceledException cancel)
             {
@@ -241,14 +241,14 @@ namespace BubbleDownloadYoutube
             }
         }
 
-        private void DownloadButton_Click(object sender, RoutedEventArgs e)
+        private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                pivot.SelectedIndex = 2;
+                pivot.SelectedItem = PivotItemDownloading;
                 DownloadItem item = (sender as Button).DataContext as DownloadItem;
-                DownloadVideoToLibrary(item);
-                pivot.SelectedIndex = 1;
+                await DownloadVideoToLibrary(item);
+                pivot.SelectedItem = PivotItemFinished;
             }
             catch (Exception ex)
             {
@@ -267,12 +267,12 @@ namespace BubbleDownloadYoutube
             }
             catch (Exception ex)
             {
-                prgDownload.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                prgSearch.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
         }
 
-        private async void SaveState(DownloadItem itemToSave)
+        private async Task SaveState(DownloadItem itemToSave)
         {
             string jsonItem = Newtonsoft.Json.JsonConvert.SerializeObject(itemToSave, Newtonsoft.Json.Formatting.None);
 
@@ -329,6 +329,11 @@ namespace BubbleDownloadYoutube
                     SearchBarButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    break;
+                case 3:
+                    SearchBarButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    VoiceButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                    ClearItemsButton.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
                     break;
             }
         }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage;
@@ -48,7 +49,13 @@ namespace BubbleDownloadYoutube.Data
             this.Visualizacoes = visualizacoes;
             this.UrlDownload = "https://www.youtube.com/watch?v=" + uniqueId;
             this.Status = Estado.Aguardando;
-            this.LocalPath = titulo + ".mp4";
+            this.LocalPath = RemoveIllegaChars(titulo) + ".mp4";
+        }
+
+        private string RemoveIllegaChars(string title)
+        {            
+            title = Regex.Replace(title, "[\\/?:*\"><|]+", "_");            
+            return title;
         }
 
         public string UniqueId { get; private set; }

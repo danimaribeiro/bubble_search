@@ -38,7 +38,7 @@
                             <ColumnDefinition  />
                             <ColumnDefinition Width="70"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Uid="SearchBox" Name="txtConsulta" Grid.Column="0" PlaceholderText="Search" Margin="5,5,15,5" ></TextBox>
+                        <TextBox x:Uid="SearchBox" Name="txtConsulta" Grid.Column="0" PlaceholderText="Search" Margin="5,0,14.833,0" Height="44" ></TextBox>
                         <Button Grid.Column="1" BorderThickness="0" Click="Button_Search_Click" Padding="0" MinHeight="0" MinWidth="0" Width="60" Height="45" HorizontalAlignment="Left">
                             <Button.Background>
                                 <ImageBrush Stretch="None" ImageSource="Assets/search.png"/>
@@ -183,8 +183,11 @@
                 CommonNavigationTransitionInfo.IsStaggerElement="True">
                 <!--Double line list with text wrapping-->
                 <StackPanel>
-                    <TextBlock Style="{StaticResource BodyTextBlockStyle}">Please help rating the app if you like!</TextBlock>
+                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Padding="10">Develop by </TextBlock>
+                    <HyperlinkButton NavigateUri="https://github.com/danimaribeiro" Padding="10">Danimar Ribeiro</HyperlinkButton>
+                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Padding="10">Please help rating the app if you like!</TextBlock>
                     <Button Name="buttonRate" Click="buttonRate_Click">Rate this app</Button>
+                    
                 </StackPanel>
             </PivotItem>
 

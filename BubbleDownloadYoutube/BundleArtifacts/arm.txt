@@ -1,7 +1,7 @@
-MainPackage=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_ARM.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-de.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-en.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-es.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-fr.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-it.appx
-ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.7_Bundle\BubbleDownloadYoutube_1.1.0.7_language-pt.appx
+MainPackage=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_ARM.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-de.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-en.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-es.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-fr.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-it.appx
+ResourcePack=C:\Users\danimaribeiro\Documents\Visual Studio 2013\Projects\bubble_search\BubbleDownloadYoutube\bin\ARM\Release\BubbleDownloadYoutube_1.1.0.8_Bundle\BubbleDownloadYoutube_1.1.0.8_language-pt.appx

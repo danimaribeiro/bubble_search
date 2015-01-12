@@ -57,9 +57,9 @@ namespace BubbleDownloadYoutube.Youtube
         public override async Task ExecuteAsync(CancellationToken tokenCancel, IProgress<int> progress)
         {
             var url = new System.Uri(this.Video.DownloadUrl);
-
+            
             StorageFile destinationFile
-              = await KnownFolders.SavedPictures.CreateFileAsync(this.Video.Title + ".mp4",
+              = await KnownFolders.SavedPictures.CreateFileAsync(this.ItemDownload.LocalPath,
                   CreationCollisionOption.GenerateUniqueName);
 
             var httpClient = new Windows.Web.Http.HttpClient();
